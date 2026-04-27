@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
 
@@ -16,9 +17,21 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   
+  const router = useRouter();
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    // your code here
+    setLoading(true);
+    
+    // Simulating API Call
+    setTimeout(() => {
+      setLoading(false);
+      if (activeRole === "teacher") {
+        router.push("/teacher/dashboard");
+      } else {
+        setError("Student Dashboard is coming soon!");
+      }
+    }, 1500);
   };
 
   return (
