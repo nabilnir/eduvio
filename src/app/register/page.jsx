@@ -21,10 +21,48 @@ export default function RegisterPage() {
 
   const router = useRouter();
 
+  
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, role: activeRole })
+      }).catch{
+
+      }
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message);
+        setLoading(false);
+        return;
+      }
+
+      // Save token + role
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', data.role);
+      localStorage.setItem('name', data.name);
+
+      // Redirect based on role
+      if (data.role === 'teacher') {
+        router.push('/dashboard/teacher');
+      } else {
+        router.push('/dashboard/student');
+      }
+    } catch (err) {
+      alert('Something went wrong.');
+    } finally {
+      setLoading(false);
+    }
+  
+
+
     // Simulating API Call
     setTimeout(() => {
       setLoading(false);

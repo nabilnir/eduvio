@@ -22,7 +22,44 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
+
+    try{
+      const res = await fetch('http://localhost:5000/api/auth/login', 
+      
+    {
+
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }) 
+    });
+
+    if (!res.ok) {
+      setError(data.message);
+      setLoading(false);
+      return;
+    }
+
+    // Save token + role to localStorage
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('role', data.role);
+    localStorage.setItem('name', data.name);
     
+
+     // Redirect based on role
+    if (data.role === 'teacher') {
+      router.push('/dashboard/teacher');
+    } else {
+      router.push('/dashboard/student');
+    }
+    
+    } catch (err) {
+    setError('Something went wrong. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+
+
     // Simulating API Call
     setTimeout(() => {
       setLoading(false);
