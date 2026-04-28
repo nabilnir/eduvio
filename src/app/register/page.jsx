@@ -29,10 +29,9 @@ export default function RegisterPage() {
     setTimeout(() => {
       setLoading(false);
       if (activeRole === "teacher") {
-        router.push("/teacher/dashboard");
+        router.push("/dashboard/teacher");
       } else {
-        alert("Student account created! Student Dashboard is coming soon.");
-        router.push("/");
+        router.push("/dashboard/student");
       }
     }, 1500);
   };

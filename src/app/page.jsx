@@ -27,9 +27,9 @@ export default function LoginPage() {
     setTimeout(() => {
       setLoading(false);
       if (activeRole === "teacher") {
-        router.push("/teacher/dashboard");
+        router.push("/dashboard/teacher");
       } else {
-        setError("Student Dashboard is coming soon!");
+        router.push("/dashboard/student");
       }
     }, 1500);
   };
