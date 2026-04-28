@@ -30,14 +30,8 @@ export default function TeacherDashboard() {
       
       {/* ── Side Navigation ── */}
       <aside className="fixed left-0 top-0 h-screen w-[260px] border-r border-border bg-white shadow-sm flex flex-col p-6 space-y-8 z-50">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
-            <span className="material-symbols-outlined">school</span>
-          </div>
-          <div>
-            <h1 className="text-xl font-extrabold text-primary tracking-tight">Eduvio</h1>
-            <p className="text-[10px] font-medium text-text-muted uppercase tracking-widest">Academic Management</p>
-          </div>
+        <div className="flex items-center px-2">
+          <img src="/mainlogo.png" alt="Eduvio Logo" className="w-32 h-auto object-contain" />
         </div>
 
         <nav className="flex-1 space-y-1">

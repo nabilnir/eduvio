@@ -31,14 +31,8 @@ export default function StudentDashboard() {
       
       {/* ── Side Navigation ── */}
       <aside className="fixed left-0 top-0 h-screen w-[260px] border-r border-border bg-white shadow-sm flex flex-col p-6 space-y-8 z-50">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-            <span className="material-symbols-outlined text-white">school</span>
-          </div>
-          <div>
-            <h1 className="text-xl font-extrabold text-primary tracking-tight leading-none">Eduvio</h1>
-            <p className="text-[10px] text-text-secondary font-medium uppercase tracking-widest mt-1">Academic Management</p>
-          </div>
+        <div className="flex items-center gap-3 px-2">
+          <img src="/mainlogo.png" alt="Eduvio Logo" className="w-32 h-auto object-contain" />
         </div>
 
         <nav className="flex-1 space-y-1">
