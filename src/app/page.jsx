@@ -180,20 +180,13 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex justify-center">
             <button
               onClick={() => handleSocialLogin(googleProvider)}
-              className="flex items-center justify-center gap-3 py-3.5 border border-border rounded-2xl hover:bg-surface-muted transition-all active:scale-[0.98]"
+              className="w-full flex items-center justify-center gap-3 py-3.5 border border-border rounded-2xl hover:bg-surface-muted transition-all active:scale-[0.98]"
             >
               <Image src="https://www.google.com/favicon.ico" alt="Google" width={18} height={18} />
-              <span className="text-xs font-bold text-text-primary">Google</span>
-            </button>
-            <button
-              onClick={() => handleSocialLogin(microsoftProvider)}
-              className="flex items-center justify-center gap-3 py-3.5 border border-border rounded-2xl hover:bg-surface-muted transition-all active:scale-[0.98]"
-            >
-              <Image src="https://www.microsoft.com/favicon.ico" alt="Microsoft" width={18} height={18} />
-              <span className="text-xs font-bold text-text-primary">Microsoft</span>
+              <span className="text-xs font-bold text-text-primary">Continue with Google</span>
             </button>
           </div>
 

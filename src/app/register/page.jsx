@@ -280,25 +280,15 @@ export default function RegisterPage() {
                 <div className="grow border-t border-border"></div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex justify-center">
                 <button
                   type="button"
                   onClick={() => handleSocialLogin(googleProvider)}
                   disabled={loading}
-                  className="flex items-center justify-center space-x-3 py-3 border border-border rounded-xl hover:bg-surface-muted transition-all active:scale-95 disabled:opacity-50"
+                  className="w-full flex items-center justify-center space-x-3 py-3.5 border border-border rounded-xl hover:bg-surface-muted transition-all active:scale-[0.98] disabled:opacity-50"
                 >
                   <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
-                  <span className="text-sm font-bold text-text-primary">Google</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleSocialLogin(microsoftProvider)}
-                  disabled={loading}
-                  className="flex items-center justify-center space-x-3 py-3 border border-border rounded-xl hover:bg-surface-muted transition-all active:scale-95 disabled:opacity-50"
-                >
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" className="w-5 h-5" />
-                  <span className="text-sm font-bold text-text-primary">Microsoft</span>
+                  <span className="text-sm font-bold text-text-primary">Continue with Google</span>
                 </button>
               </div>
 
