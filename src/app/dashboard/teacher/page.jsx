@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "/api";
 
 export default function TeacherDashboard() {
   const router = useRouter();

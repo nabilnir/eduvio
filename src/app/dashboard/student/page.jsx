@@ -36,7 +36,7 @@ export default function StudentDashboard() {
       setUser(prev => ({ ...prev, name, profilePic }));
     }
 
-    fetch('/backend-api/slots')
+    fetch('/api/slots')
       .then(res => res.json())
       .then(data => setSlots(data))
       .catch(err => console.error('Failed to fetch slots:', err));
@@ -60,7 +60,7 @@ export default function StudentDashboard() {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`/backend-api/slots/book/${slotId.toString()}`, {
+        const res = await fetch(`/api/slots/book/${slotId.toString()}`, {
           method: 'PATCH'
         });
         const data = await res.json();
@@ -74,7 +74,7 @@ export default function StudentDashboard() {
           timer: 2000
         });
 
-        const updatedSlots = await fetch('/backend-api/slots').then(r => r.json());
+        const updatedSlots = await fetch('/api/slots').then(r => r.json());
         setSlots(updatedSlots);
       } catch (err) {
         Swal.fire({
