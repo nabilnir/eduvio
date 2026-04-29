@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider, microsoftProvider } from "@/lib/firebase";
 
 export default function RegisterPage() {
   const [activeRole, setActiveRole] = useState("student"); // "student" | "teacher"
@@ -21,20 +24,16 @@ export default function RegisterPage() {
 
   const router = useRouter();
 
-  
-
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
+      const res = await fetch('http://127.0.0.1:8888/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, role: activeRole })
-      }).catch{
-
-      }
+      });
 
       const data = await res.json();
 
@@ -44,12 +43,11 @@ export default function RegisterPage() {
         return;
       }
 
-      // Save token + role
       localStorage.setItem('token', data.token);
       localStorage.setItem('role', data.role);
       localStorage.setItem('name', data.name);
+      localStorage.setItem('profilePic', data.profilePic || '');
 
-      // Redirect based on role
       if (data.role === 'teacher') {
         router.push('/dashboard/teacher');
       } else {
@@ -60,28 +58,50 @@ export default function RegisterPage() {
     } finally {
       setLoading(false);
     }
-  
+  };
 
+  const handleSocialLogin = async (provider) => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-    // Simulating API Call
-    setTimeout(() => {
+      const res = await fetch('http://127.0.0.1:8888/api/auth/social-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: user.displayName,
+          email: user.email,
+          profilePic: user.photoURL,
+          provider: provider.providerId === 'google.com' ? 'google.com' : 'microsoft.com'
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', data.role);
+      localStorage.setItem('name', data.name);
+      localStorage.setItem('profilePic', data.profilePic || '');
+
+      router.push(data.role === 'teacher' ? '/dashboard/teacher' : '/dashboard/student');
+    } catch (err) {
+      console.error('Social Login Error:', err);
+      alert('Login failed: ' + err.message);
+    } finally {
       setLoading(false);
-      if (activeRole === "teacher") {
-        router.push("/dashboard/teacher");
-      } else {
-        router.push("/dashboard/student");
-      }
-    }, 1500);
+    }
   };
 
   return (
-    <main className="flex-grow flex items-center justify-center p-6 md:p-10 bg-background min-h-screen">
-      <div className="max-w-[1200px] w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+    <main className="grow flex items-center justify-center p-6 md:p-10 bg-background min-h-screen">
+      <div className="max-w-300 w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
 
         {/* Left Side: Branding & Visual Anchor */}
         <section className="hidden lg:flex lg:col-span-5 flex-col space-y-8 pr-8">
           <div className="flex items-center space-x-3">
-            <img src="/mainlogo.png" alt="Eduvio Logo" className="w-12 h-auto object-contain" />
+            <Image src="/mainlogo.png" alt="Eduvio Logo" width={48} height={48} className="h-auto object-contain" />
             <h1 className="text-3xl font-bold text-primary tracking-tight">Eduvio</h1>
           </div>
 
@@ -94,19 +114,20 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <div className="relative w-full aspect-video rounded-[32px] overflow-hidden shadow-2xl shadow-primary/10 group">
-            <img
+          <div className="relative w-full aspect-video rounded-4xl overflow-hidden shadow-2xl shadow-primary/10 group">
+            <Image
               alt="Students collaborating"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4948gjAiwLBorBq6A98dLkiQySKwG56B7JgUwkhag0o8oEgdCkgsQWKy8dDjUZymeNe73WWR44l6QfZLExf_5p8nbH5Mq1B3MnzMZ50peVUR8iSBM-wPaqCIaefCkSiit9pG16Wxko_gaCquqDJwYPODXp5lH_43jCz-3jRM_EcYCSecIsW9xQ9uaIhc-Ozv8I-Zxp5YHavytDTwIn57Fba_oYOyS3wvB32RN1Sf26vJn_CctoLB5dFhxsXKmDURGxiaT170ej9c"
+              fill
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-primary/40 to-transparent" />
           </div>
         </section>
 
         {/* Right Side: Registration Card */}
         <section className="lg:col-span-7 w-full flex justify-center">
-          <div className="bg-surface w-full max-w-[560px] p-8 md:p-12 rounded-[32px] shadow-xl shadow-black/5 border border-border">
+          <div className="bg-surface w-full max-w-140 p-8 md:p-12 rounded-4xl shadow-xl shadow-black/5 border border-border">
 
             {/* Header */}
             <div className="mb-10">
@@ -117,7 +138,7 @@ export default function RegisterPage() {
                 </Link>
               </div>
               <h3 className="text-3xl font-extrabold text-text-primary mb-2">Create your account</h3>
-              <p className="text-sm text-text-secondary">Let's start by identifying your role in the classroom.</p>
+              <p className="text-sm text-text-secondary">{"Let's start by identifying your role in the classroom."}</p>
             </div>
 
             {/* Role Selection */}
@@ -157,9 +178,9 @@ export default function RegisterPage() {
 
             {/* Divider */}
             <div className="relative flex items-center mb-10">
-              <div className="flex-grow border-t border-border"></div>
+              <div className="grow border-t border-border"></div>
               <span className="px-4 text-[10px] font-bold text-text-muted uppercase tracking-widest bg-surface">Account Details</span>
-              <div className="flex-grow border-t border-border"></div>
+              <div className="grow border-t border-border"></div>
             </div>
 
             {/* Form Fields */}
@@ -252,8 +273,37 @@ export default function RegisterPage() {
                 </button>
               </div>
 
+              {/* Social Login Section */}
+              <div className="relative flex items-center py-4">
+                <div className="grow border-t border-border"></div>
+                <span className="px-4 text-[10px] font-bold text-text-muted uppercase tracking-widest bg-surface">Or continue with</span>
+                <div className="grow border-t border-border"></div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => handleSocialLogin(googleProvider)}
+                  disabled={loading}
+                  className="flex items-center justify-center space-x-3 py-3 border border-border rounded-xl hover:bg-surface-muted transition-all active:scale-95 disabled:opacity-50"
+                >
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+                  <span className="text-sm font-bold text-text-primary">Google</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSocialLogin(microsoftProvider)}
+                  disabled={loading}
+                  className="flex items-center justify-center space-x-3 py-3 border border-border rounded-xl hover:bg-surface-muted transition-all active:scale-95 disabled:opacity-50"
+                >
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" className="w-5 h-5" />
+                  <span className="text-sm font-bold text-text-primary">Microsoft</span>
+                </button>
+              </div>
+
               <p className="text-center text-[11px] text-text-muted mt-6 px-4">
-                By registering, you agree to Eduvio's <Link className="text-primary font-bold hover:underline" href="#">Terms of Service</Link> and <Link className="text-primary font-bold hover:underline" href="#">Privacy Policy</Link>.
+                {"By registering, you agree to Eduvio's "}<Link className="text-primary font-bold hover:underline" href="#">Terms of Service</Link> and <Link className="text-primary font-bold hover:underline" href="#">Privacy Policy</Link>.
               </p>
             </form>
           </div>
